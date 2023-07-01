@@ -50,6 +50,7 @@ dependencies:
   provider:
   url_launcher:
   shared_preferences:
+  flutter_speed_dial: ^7.0.0
   #  firebase_auth_platform_interface:
   
 

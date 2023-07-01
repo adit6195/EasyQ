@@ -8,17 +8,17 @@ import 'package:easy_q/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PatientRegistrationListPage extends StatefulWidget {
-  String role;
-  PatientRegistrationListPage({required this.role});
+class RefundScreen extends StatefulWidget {
+  // String role;
+  // RefundScreen({required this.role});
 
   @override
-  State<PatientRegistrationListPage> createState() =>
-      _PatientRegistrationListPageState();
+  State<RefundScreen> createState() =>
+      _RefundScreenState();
 }
 
-class _PatientRegistrationListPageState
-    extends State<PatientRegistrationListPage> {
+class _RefundScreenState
+    extends State<RefundScreen> {
   List<String> allDoctors = [];
   String doctor = "";
 
@@ -57,26 +57,15 @@ class _PatientRegistrationListPageState
     return DefaultTabController(
       length: allDoctors.length,
       child: Scaffold(
-          floatingActionButton:widget.role=="Registration" ? FloatingActionButton(
-            backgroundColor: Colors.deepPurpleAccent,
-              child: Icon(Icons.person_add_alt_1),
-              onPressed: () {
-                navigateslide(PatientRegistrationPage(), context);
-              }):null,
+          // floatingActionButton:widget.role=="Registration" ? FloatingActionButton(
+          //   backgroundColor: Colors.deepPurple,
+          //     child: Icon(Icons.person_add_alt_1),
+          //     onPressed: () {
+          //       navigateslide(PatientRegistrationPage(), context);
+          //     }):null,
           appBar: AppBar(
-            actions: [
-              widget.role=="Registration"? IconButton(onPressed:() {
-                Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => RefundScreen()));
-              },icon: Icon(Icons.money)): Container(),
-            ],
             backgroundColor: Colors.purple[700],
-            title: GestureDetector(
-                onTap: () {
-                  // Navigator.of(context).push(
-                  //     MaterialPageRoute(builder: (context) => RolePage()));
-                },
-                child:widget.role=="Doctor Room"?Text("Doctor Waiting list") : widget.role=="Room 3 Queue"? Text("Room 3 Queue") : widget.role=="Room 3"? Text("Room 3"): Text("Patient Registration List")),
+            title: Text("Pateint Refund List"),
                 
             bottom: TabBar(
               tabs: allDoctors.map((e) => Text(e)).toList(),
@@ -88,7 +77,7 @@ class _PatientRegistrationListPageState
             ),
           ),
           body: TabBarView(
-            children: allDoctors.map((e) => renderPatientList(e,widget.role)).toList(),
+            children: allDoctors.map((e) => renderPatientList(e)).toList(),
             //   for (var i = 0; i < allDoctors.length; i++) {
             //   renderPatientList(allDoctors[i]),
 
@@ -99,13 +88,13 @@ class _PatientRegistrationListPageState
   }
 
   StreamBuilder<QuerySnapshot<Map<String, dynamic>>> renderPatientList(
-      String doctorName,String role,) {
+      String doctorName) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("Appointments")
           .where("doctor_name", isEqualTo: doctorName)
-          .where("status",isEqualTo: getFilter(role))
-          .orderBy("isCalled",descending: true)
+          .where("status",isEqualTo: "refund")
+          // .orderBy("appointment_no")
           .snapshots(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
@@ -113,7 +102,7 @@ class _PatientRegistrationListPageState
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 return appointmenttile(
-                    AppointmentModel.fromFirestore(snapshot.data!.docs[index]),role,context);
+                    AppointmentModel.fromFirestore(snapshot.data!.docs[index]),"Refund",context);
               });
         } else {
           return CircularProgressIndicator();
@@ -123,23 +112,6 @@ class _PatientRegistrationListPageState
   }
 }
 
-String getFilter(String role){
-  if (role == "Registration"){
-    return "registered";
-  }
-  else if(role == "Waiting Room"){
-    return "registered";
-  }
-  else if(role =="Doctor Room"){
-    return "waiting";
-  }
-  else if(role =="Room 3 Queue"){
-    return "room 3 queue";
-  }
-  else{
-    return "room 3";
-  }
-}
 
 
 Color getStatusColor(String patientStatus) {

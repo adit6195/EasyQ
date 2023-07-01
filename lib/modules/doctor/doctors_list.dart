@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_q/components.dart';
 import 'package:easy_q/decoration.dart';
 import 'package:easy_q/models/doctor_model.dart';
+import 'package:easy_q/modules/doctor/doctor_add_page.dart';
 import 'package:easy_q/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,14 +38,22 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
   Widget build(BuildContext context) {
     TextEditingController _controller = TextEditingController();
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.deepPurpleAccent,
+        child: Icon(Icons.add),
+        onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => DoctorAddPage(null)));
+            
+        },
+      ),
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
-          "Doctors",
-          style: GoogleFonts.montserrat(color: Colors.black),
+          "Doctors List",
+          // style: GoogleFonts.montserrat(font),
         ),
         // backgroundColor: ColorPlatte.primaryColor,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.purple[700],
         actions: [],
       ),
       // drawer: CustomDrawer(),

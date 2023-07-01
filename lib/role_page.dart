@@ -19,9 +19,7 @@ class _RolePageState extends State<RolePage> {
 
   List<String> _items = [
     "Doctor",
-    'Compounder',
-    'Warden',
-    'reception',
+    "Gate Keeper"
   ];
   String verificationCode = "";
   @override
@@ -73,7 +71,7 @@ class _RolePageState extends State<RolePage> {
                 onPressed: () {
                   print("Tapped");
 
-                  FirebaseFirestore.instance.collection("Roles").add({
+                  FirebaseFirestore.instance.collection("guard").add({
                     "name": _nameController.text,
                     "phone": _phoneController.text,
                     "role": _selectedItem

@@ -31,7 +31,7 @@ class _DoctorAddPageState extends State<DoctorAddPage> {
 
   String doctor = "Add Doctor";
   File? pickedImage;
-  String? imageUrl = null;
+  String? imageUrl = "";
 
   // List<String> allDoctors = ["Add Doctor"];
 
@@ -157,124 +157,133 @@ class _DoctorAddPageState extends State<DoctorAddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add Doctor")),
-      body: SingleChildScrollView(
-        child: Column(children: [
-          textField(
-              _doctorNameController, "Please Enter Doctor Name", "Doctor Name"),
-          textField(_doctorMobileController, "Please Enter Phone Number",
-              "Phone Number"),
-          textField(_doctorQualificationController,
-              "Please Enter Qualification", "Qualification"),
-          textField(_doctorRegistrationNumberController,
-              "Please Enter Registration", "Registration"),
-          textField(_doctorConsultationFeeController,
-              "Please Enter Consultation Fee", "Consultation Fee"),
-          textField(_doctorCheckupTimeInSecondController,
-              "Please Enter Duration", "Duration"),
-          GestureDetector(
-            onTap: () {
-              pickImage();
-            },
-            child: Container(
-              height: 80,
-              width: 80,
-              child: pickedImage != null
-                  ? Image.file(pickedImage!, fit: BoxFit.cover)
-                  : (widget.model != null && widget.model!.doctorImage != null)
-                      ? Image.network(widget.model!.doctorImage!,
-                          fit: BoxFit.cover)
-                      : Container(
-                          decoration: BoxDecoration(border: Border.all()),
-                        ),
-            ),
-          ),
-          // ElevatedButton(
-          //     onPressed: () {
-          //       uploadFile(pickedImage, "Doctor", doctor);
-          //     },
-          //     child: Text("Push Image")),
-          ElevatedButton(
-              onPressed: () async {
-                await uploadFile(pickedImage, "Doctor", doctor);
-                if (widget.model != null) {
-                  FirebaseFirestore.instance.collection("doctors").add({
-                    "doctor_mobile": _doctorMobileController.text,
-                    "doctor_name": _doctorNameController.text,
-                    "doctor_qualification": _doctorQualificationController.text,
-                    "doctor_registration_no":
-                        _doctorRegistrationNumberController.text,
-                    "doctor_registration_count": 0,
-                    "doctor_consultation_fee":
-                        _doctorConsultationFeeController.text,
-                    "doctor_id": "",
-                    "doctor_hospital_id": "",
-                    "doctor_image": imageUrl,
-                    "doctor_add_update_timestamp": DateTime.now(),
-                    "doctor_add_update_userid": "",
-                    "doctor_checkup_time":
-                        int.parse(_doctorCheckupTimeInSecondController.text),
-                  }).then((value) => {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                                "Done at Sr#" + DateTime.now().toString())))
-                      });
-                } else {
-                  FirebaseFirestore.instance
-                      .collection("doctors")
-                      .doc(widget.model!.doctorDocID)
-                      .update({
-                    "doctor_mobile": _doctorMobileController.text,
-                    "doctor_name": _doctorNameController.text,
-                    "doctor_qualification": _doctorQualificationController.text,
-                    "doctor_registration_no":
-                        _doctorRegistrationNumberController.text,
-                    "doctor_registration_count": 0,
-                    "doctor_consultation_fee":
-                        _doctorConsultationFeeController.text,
-                    "doctor_id": "",
-                    "doctor_hospital_id": "",
-                    "doctor_image": imageUrl,
-                    "doctor_add_update_timestamp": DateTime.now(),
-                    "doctor_add_update_userid": "",
-                    "doctor_checkup_time":
-                        int.parse(_doctorCheckupTimeInSecondController.text),
-                  }).then((value) => {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    "Done at Sr#" + DateTime.now().toString())))
-                          });
-                }
-                setState(() {
-                  doctor = "Add Doctor";
-                  imageUrl = null;
-                  widget.model = null;
-                  pickedImage = null;
-                });
-                _doctorNameController.clear();
-                _doctorMobileController.clear();
-                _doctorQualificationController.clear();
-                _doctorRegistrationNumberController.clear();
-                _doctorConsultationFeeController.clear();
-                _doctorCheckupTimeInSecondController.clear();
-
-                // FirebaseFirestore.instance
-                //     .collection("doctors")
-                //     .doc(widget.model!.doctorDocID)
-                //     .update({
-                //   "doctor_registration_count": registrationCount,
-                // }),
-                // setState(() {
-                //   widget.model!.doctorRegistrationCount =
-                //       registrationCount;
-                // }),
-                //                            });
-                //                },
+      appBar: AppBar(
+        title: Text("Add Doctor"),
+        backgroundColor: Colors.purple[700],
+        ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Column(children: [
+            textField(
+                _doctorNameController, "Please Enter Doctor Name", "Doctor Name",),
+            textField(_doctorMobileController, "Please Enter Phone Number",
+                "Phone Number"),
+            textField(_doctorQualificationController,
+                "Please Enter Qualification", "Qualification"),
+            textField(_doctorRegistrationNumberController,
+                "Please Enter Registration", "Registration"),
+            textField(_doctorConsultationFeeController,
+                "Please Enter Consultation Fee", "Consultation Fee"),
+            textField(_doctorCheckupTimeInSecondController,
+                "Please Enter Duration", "Duration"),
+            GestureDetector(
+              onTap: () {
+                pickImage();
               },
-              child: doctor == "Add Doctor"
-                  ? Text("Add Doctor")
-                  : Text("Update Doctor")),
-        ]),
+              child: Container(
+                height: 80,
+                width: 80,
+                child: pickedImage != null
+                    ? Image.file(pickedImage!, fit: BoxFit.cover)
+                    : (widget.model != null && widget.model!.doctorImage != null)
+                        ? Image.network(widget.model!.doctorImage!,
+                            fit: BoxFit.cover)
+                        : Container(
+                            decoration: BoxDecoration(border: Border.all()),
+                          ),
+              ),
+            ),
+            // ElevatedButton(
+            //     onPressed: () {
+            //       uploadFile(pickedImage, "Doctor", doctor);
+            //     },
+            //     child: Text("Push Image")),
+            ElevatedButton(
+                onPressed: () async {
+                  // await uploadFile(pickedImage, "Doctor", doctor);
+                  if (widget.model != null) {
+                    FirebaseFirestore.instance.collection("doctors").add({
+                      "doctor_mobile": _doctorMobileController.text,
+                      "doctor_name": _doctorNameController.text,
+                      "doctor_qualification": _doctorQualificationController.text,
+                      "doctor_registration_no":
+                          _doctorRegistrationNumberController.text,
+                      "doctor_registration_count": 0,
+                      "doctor_consultation_fee":
+                          _doctorConsultationFeeController.text,
+                      "doctor_id": "",
+                      "doctor_hospital_id": "",
+                      "doctor_image": imageUrl,
+                      "doctor_add_update_timestamp": DateTime.now(),
+                      "doctor_add_update_userid": "",
+                      "doctor_checkup_time":
+                          int.parse(_doctorCheckupTimeInSecondController.text),
+                    }).then((value) => {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  "Done at Sr#" + DateTime.now().toString())))
+                        });
+                  } else {
+                    FirebaseFirestore.instance
+                        .collection("doctors")
+                        .doc(widget.model!.doctorDocID)
+                        .update({
+                      "doctor_mobile": _doctorMobileController.text,
+                      "doctor_name": _doctorNameController.text,
+                      "doctor_qualification": _doctorQualificationController.text,
+                      "doctor_registration_no":
+                          _doctorRegistrationNumberController.text,
+                      "doctor_registration_count": 0,
+                      "doctor_consultation_fee":
+                          _doctorConsultationFeeController.text,
+                      "doctor_id": "",
+                      "doctor_hospital_id": "",
+                      "doctor_image": imageUrl,
+                      "doctor_add_update_timestamp": DateTime.now(),
+                      "doctor_add_update_userid": "",
+                      "doctor_checkup_time":
+                          int.parse(_doctorCheckupTimeInSecondController.text),
+                    }).then((value) => {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Done at Sr#" + DateTime.now().toString())))
+                            });
+                  }
+                  setState(() {
+                    doctor = "Add Doctor";
+                    imageUrl = null;
+                    widget.model = null;
+                    pickedImage = null;
+                  });
+                  _doctorNameController.clear();
+                  _doctorMobileController.clear();
+                  _doctorQualificationController.clear();
+                  _doctorRegistrationNumberController.clear();
+                  _doctorConsultationFeeController.clear();
+                  _doctorCheckupTimeInSecondController.clear();
+      
+                  // FirebaseFirestore.instance
+                  //     .collection("doctors")
+                  //     .doc(widget.model!.doctorDocID)
+                  //     .update({
+                  //   "doctor_registration_count": registrationCount,
+                  // }),
+                  // setState(() {
+                  //   widget.model!.doctorRegistrationCount =
+                  //       registrationCount;
+                  // }),
+                  //                            });
+                  //                },
+                },style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurpleAccent
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Add Doctor",style: TextStyle(fontSize: 18),),
+                )),
+          ]),
+        ),
       ),
     );
   }

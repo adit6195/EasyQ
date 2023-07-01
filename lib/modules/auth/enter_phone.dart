@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:easy_q/app/firebase/firebase_authentication.dart';
+import 'package:easy_q/guardrole.dart';
+import 'package:easy_q/modules/doctor/doctor_home.dart';
 import 'package:easy_q/modules/doctor/doctors_list.dart';
 import 'package:easy_q/role_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +16,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.purple[800],
         title: Text('Login Screen'),
       ),
       body: Center(
@@ -45,20 +48,78 @@ class _LoginFormState extends State<LoginForm> {
             readOnly: !isPhoneNumber,
             controller: _mobileController,
             keyboardType: TextInputType.phone,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
+              // suffix: Icon(
+              //   Icons.phone,
+              //   color: Colors.black,
+              // ),
               prefix: Text("+91"),
               labelText: 'Mobile Number',
+              labelStyle: TextStyle(
+                color: Colors.black
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.purple,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.purple,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.red,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.red,
+                ),
+              ),
             ),
           ),
           if (!isPhoneNumber)
             TextField(
               controller: _otpController,
               keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'OTP',
+                labelStyle: TextStyle(
+                  color: Colors.black
+                ),
+                enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.purple,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.purple,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.red,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.red,
+                ),
+              ),
               ),
             ),
-          SizedBox(height: 20.0),
+          SizedBox(height: 50.0),
           isSendingOTP
               ? CircularProgressIndicator()
               : ElevatedButton(
@@ -83,10 +144,27 @@ class _LoginFormState extends State<LoginForm> {
                     //       verificationId: verificationCode,
                     //       smsCode: _otpController.text);
                     // }
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => PatientRegistrationListPage()));
+                    if (_mobileController.text == "9977443900") {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DoctorHomePage(doctorName: "Ajay")));
+                    }
+                    else if (_mobileController.text == "9425143900") {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DoctorHomePage(doctorName: "Manas Khare")));
+                    }
+                    
+                     else {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const RoleScreen()));
+                    }
                   },
-                  child: isPhoneNumber ? Text('Send OTP') : Text('Verify OTP'),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 11,left: 11, top: 15,bottom: 15),
+                    child: isPhoneNumber ? Text('Send OTP',style: TextStyle(fontSize: 17),) : Text('Verify OTP',style: TextStyle(fontSize: 17),),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple
+                  ),
                 ),
         ],
       ),

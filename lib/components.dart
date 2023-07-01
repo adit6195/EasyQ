@@ -17,18 +17,45 @@ Widget textField(
   int minLines = 1,
 }) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
     child: TextFormField(
       maxLines: minLines,
       keyboardType: inputType,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       decoration: InputDecoration(
+        labelStyle: TextStyle(
+                color: Colors.black
+              ),
         alignLabelWithHint: true,
         labelText: labelText,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(15),
         ),
+        enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.purple,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.purple,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.red,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Colors.red,
+                ),
+              ),
         // labelText: labelText,
         isDense: true,
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),

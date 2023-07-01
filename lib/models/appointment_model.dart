@@ -6,10 +6,12 @@ class AppointmentModel {
   String name;
   String phone;
   String age;
-  bool isMale;
+  String ageFormat;
+  String gender;
+  bool isCalled;
   bool isPriority;
   bool isRevisited;
-  // bool priorityApplied;
+  bool isEmergency;
   String patientID;
   String complain;
   int appointmentNo;
@@ -24,10 +26,12 @@ class AppointmentModel {
     required this.name,
     required this.phone,
     required this.age,
-    required this.isMale,
-    // required this.priorityApplied,
+    required this.ageFormat,
+    required this.gender,
+    required this.isCalled,
     required this.isRevisited,
     required this.isPriority,
+    required this.isEmergency,
     required this.patientID,
     required this.complain,
     required this.appointmentNo,
@@ -44,12 +48,14 @@ class AppointmentModel {
       'name': name,
       'phone': phone,
       'age': age,
-      'isMale': isMale,
+      "ageFormat": ageFormat,
+      'gender': gender,
+      "isCalled" : isCalled,
       'isPriority': isPriority,
-      // 'priority_applied': priorityApplied,
       'isRevisited': isRevisited,
+      'isEmergency': isEmergency,
       'complaint': complain,
-      "doc_id": patientID,
+      "patient_id": patientID,
       'appointment_no': appointmentNo,
       'doctor_name': doctorName,
       "status": status,
@@ -68,11 +74,13 @@ class AppointmentModel {
       name: map['name'],
       phone: map['phone'],
       age: map['age'],
-      isMale: map['isMale'],
+      ageFormat: map['ageFormat'],
+      gender: map['gender'],
+      isCalled: map['isCalled'],
       isRevisited: map['isRevisited'],
-      // priorityApplied: map['priority_applied'],
-      patientID: map['doc_id'],
+      patientID: map['patient_id'],
       isPriority: map['isPriority'],
+      isEmergency: map['isEmergency'],
       complain: map['complaint'],
       appointmentNo: map['appointment_no'],
       doctorName: map['doctor_name'],
