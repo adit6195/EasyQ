@@ -311,6 +311,7 @@ class _PatientRegistrationPageState extends State<PatientRegistrationPage> {
                       "phone": _mobileController.text,
                       "name": _nameController.text,
                       "age": _ageController.text,
+                      "isCalled": false,
                       "isPriority": isPriority,
                       "isRevisited": isRevisited,
                       "gender": gender,
