@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_q/components.dart';
 import 'package:easy_q/decoration.dart';
+import 'package:easy_q/doctortile.dart';
 import 'package:easy_q/models/doctor_model.dart';
 import 'package:easy_q/modules/doctor/doctor_add_page.dart';
+import 'package:easy_q/modules/doctor/doctor_registration.dart';
 import 'package:easy_q/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,7 +45,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
         child: Icon(Icons.add),
         onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DoctorAddPage(null)));
+                            builder: (context) => DoctorRegistrationPage(null)));
             
         },
       ),
@@ -64,6 +66,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
             child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection("doctors")
+                    .orderBy("doctor_registration_no",descending: false)
                     // .where("user_id", isEqualTo: userid)
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -81,10 +84,8 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                         itemBuilder: (context, index) {
                           // ignore: unused_local_variable
 
-                          return doctortile(
-                              DoctorModel.fromFirestore(
-                                  snapshot.data!.docs[index]),
-                              context);
+                         return DoctorTile(
+                    model: DoctorModel.fromFirestore(snapshot.data!.docs[index]),context: context);
                         });
                   }
                 }),

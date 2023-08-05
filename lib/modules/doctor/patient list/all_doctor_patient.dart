@@ -1,44 +1,74 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_q/models/appointment_model.dart';
 import 'package:easy_q/patienttile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
-import '../../../models/appointment_model.dart';
-import '../../../widget.dart';
-
-class AllPatientScreen extends StatefulWidget {
-  String doctor;
-  AllPatientScreen({required this.doctor});
+class AllDoctorPatient extends StatefulWidget {
+  const AllDoctorPatient({Key? key}) : super(key: key);
 
   @override
-  State<AllPatientScreen> createState() => _AllPatientScreenState();
+  State<AllDoctorPatient> createState() => _AllDoctorPatientState();
 }
 
-class _AllPatientScreenState extends State<AllPatientScreen> {
+class _AllDoctorPatientState extends State<AllDoctorPatient> {
   DateTime thisdate = DateTime.now();
   num x = 0;
-  
+
+  List<String> allDoctors = [];
+  String doctor = "";
+
+  void getDoctorsList() {
+    FirebaseFirestore.instance
+        .collection("doctors")
+        .orderBy("doctor_name")
+        .get()
+        .then((value) => {
+              for (var i = 0; i < value.docs.length; i++)
+                {
+                  setState(() {
+                    allDoctors.add(value.docs[i]["doctor_name"]);
+                  })
+                },
+              if (value.docs.length > 0)
+                {
+                  setState(() {
+                    doctor = value.docs[0]["doctor_name"];
+                  })
+                },
+              print(value.docs.length),
+              print("All Doctors" + allDoctors[0]),
+            });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    sumall(thisdate, widget.doctor).
+    getDoctorsList();
+    sumall(thisdate, doctor).
     then((value) {
       setState(() {
         x=value;
       });
       });
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // selectDate();
-      appBar: AppBar(
-        actions: [
-          IconButton(
+    return DefaultTabController(
+      length: allDoctors.length,
+      child: Scaffold(
+          // floatingActionButton:widget.role=="Registration" ? FloatingActionButton(
+          //   backgroundColor: Colors.deepPurple,
+          //     child: Icon(Icons.person_add_alt_1),
+          //     onPressed: () {
+          //       navigateslide(PatientRegistrationPage(), context);
+          //     }):null,
+          appBar: AppBar(
+            actions: [
+              IconButton(
               onPressed: () {
                 selectDate();
                 print("ho rha hai?");
@@ -49,7 +79,7 @@ class _AllPatientScreenState extends State<AllPatientScreen> {
                 //     .then((value) {
                 //   if (value.docs.isNotEmpty) {
                 //     for (var i = 0; i < value.docs.length; i++){
-                //       FirebaseFirestore.instance.collection("Appointments").doc(value.docs[i]["patient_id"]).update({"fees":200});
+                //       FirebaseFirestore.instance.collection("Appointments").doc(value.docs[i]["patient_id"]).update({"isRefund":true});
                 //       print("adding" + "200");
                 //     }
                 //   }
@@ -57,32 +87,39 @@ class _AllPatientScreenState extends State<AllPatientScreen> {
                 // );
               },
               icon: const Icon(Icons.calendar_month))
-        ],
-        backgroundColor: Colors.purple[800],
-        title: const Text("All Patient"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
+            ],
+            backgroundColor: Colors.purple[700],
+            title: Text("All Patient"),
+                
+            bottom: TabBar(
+              tabs: allDoctors.map((e) => Text(e)).toList(),
             ),
-            Text(
-              "Date: "+thisdate.day.toString()+"/"+thisdate.month.toString()+"/"+thisdate.year.toString(),
-              style: TextStyle(fontSize: 30),
-            ),
-            // Text("text" + widget.doctor, style: TextStyle(fontSize: 50)),
-            StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection("Appointments")
-                  .where("doctor_name", isEqualTo: widget.doctor)
-                  // .where("registration_time", isEqualTo: thisdate.day+thisdate.month+thisdate.year)
-                  // .where("status", isEqualTo: "doctor room")
-                  // .orderBy("appointment_no")
-                  .snapshots(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
+          ),
+          bottomNavigationBar: Container(
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,children: [
+              
+              Text("Date: "+thisdate.day.toString()+"/"+thisdate.month.toString()+"/"+thisdate.year.toString()),
+              Text("Fees:"+x.toString())
+            ],)
+          ),
+          body: TabBarView(
+            children: allDoctors.map((e) => renderPatientList(e)).toList(),
+          )
+        ),
+    );
+  }
+
+  StreamBuilder<QuerySnapshot<Map<String, dynamic>>> renderPatientList(
+      String doctorName) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection("Appointments")
+          .where("doctor_name", isEqualTo: doctorName)
+          // .orderBy("appointment_no")
+          .snapshots(),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data!.docs.length,
@@ -99,25 +136,20 @@ class _AllPatientScreenState extends State<AllPatientScreen> {
                           return AppontmentTile(
                               model: AppointmentModel.fromFirestore(
                                   snapshot.data!.docs[index],),
-                              role: "allpatient",
+                              role: "alldoctorpatient",
                               context: context);
                         } else {
                           return Container();
                         }
                         
                       });
-                } else {
-                  return CircularProgressIndicator();
-                }
-              },
-            ),
-            Text("Today's Total" + x.toString())
-          ],
-        ),
-      ),
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
     );
-  }
 
+  }
   void selectDate() {
     showDatePicker(
             context: context,
@@ -128,10 +160,9 @@ class _AllPatientScreenState extends State<AllPatientScreen> {
       setState(() {
         thisdate = value!;
       });
-      sumall(thisdate,widget.doctor).then((value) {
+      sumall(thisdate,doctor).then((value) {
                   setState(() {
                     x=value;
-                  // print(x);
                   });
                   print(x.toString());
                 });

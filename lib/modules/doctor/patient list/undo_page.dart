@@ -1,24 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_q/functions.dart';
 import 'package:easy_q/models/appointment_model.dart';
-import 'package:easy_q/models/refund_model.dart';
-import 'package:easy_q/modules/registration/patient_registration_page.dart';
-import 'package:easy_q/role_page.dart';
-import 'package:easy_q/widget.dart';
+import 'package:easy_q/patienttile.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 
-class RefundScreen extends StatefulWidget {
-  // String role;
-  // RefundScreen({required this.role});
+class UndoStatePage extends StatefulWidget {
+
+  String role;
+  UndoStatePage({required this.role});
 
   @override
-  State<RefundScreen> createState() =>
-      _RefundScreenState();
+  State<UndoStatePage> createState() => _UndoStatePageState();
 }
 
-class _RefundScreenState
-    extends State<RefundScreen> {
+class _UndoStatePageState extends State<UndoStatePage> {
   List<String> allDoctors = [];
   String doctor = "";
 
@@ -51,7 +48,7 @@ class _RefundScreenState
     super.initState();
     getDoctorsList();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -65,7 +62,7 @@ class _RefundScreenState
           //     }):null,
           appBar: AppBar(
             backgroundColor: Colors.purple[700],
-            title: Text("Pateint Refund List"),
+            title: Text("Pateint Undo List"),
                 
             bottom: TabBar(
               tabs: allDoctors.map((e) => Text(e)).toList(),
@@ -77,7 +74,7 @@ class _RefundScreenState
             ),
           ),
           body: TabBarView(
-            children: allDoctors.map((e) => renderPatientList(e)).toList(),
+            children: allDoctors.map((e) => renderPatientList(e,widget.role)).toList(),
             //   for (var i = 0; i < allDoctors.length; i++) {
             //   renderPatientList(allDoctors[i]),
 
@@ -88,12 +85,12 @@ class _RefundScreenState
   }
 
   StreamBuilder<QuerySnapshot<Map<String, dynamic>>> renderPatientList(
-      String doctorName) {
+      String doctorName, String role) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("Appointments")
           .where("doctor_name", isEqualTo: doctorName)
-          .where("status",isEqualTo: "refund")
+          .where("status",isEqualTo: getUndoFilter(role))
           // .orderBy("appointment_no")
           .snapshots(),
       builder: (context, AsyncSnapshot snapshot) {
@@ -101,8 +98,8 @@ class _RefundScreenState
           return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                return appointmenttile(
-                    AppointmentModel.fromFirestore(snapshot.data!.docs[index]),"Refund",context);
+                return AppontmentTile(
+                    model: AppointmentModel.fromFirestore(snapshot.data!.docs[index]),role: "undo",context: context);
               });
         } else {
           return CircularProgressIndicator();
@@ -110,16 +107,15 @@ class _RefundScreenState
       },
     );
   }
-}
-
-
-
-Color getStatusColor(String patientStatus) {
-  switch (patientStatus) {
-    case "Booked":
-      return Colors.green.shade100;
-
-    default:
-      return Colors.green.shade500;
+  String getUndoFilter(String role){
+    if(role == "Waiting Room"){
+    return "waiting";
   }
+  else if(role =="Doctor Room"){
+    return "doctor room";
+  }
+  else{
+    return "room 3";
+  }
+}
 }

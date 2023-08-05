@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_q/guardrole.dart';
+import 'package:easy_q/modules/auth/enter_phone.dart';
+import 'package:easy_q/modules/doctor/doctor_home.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,6 +60,53 @@ launchURL(String url) async {
   } else {
     throw 'Could not launch $url';
   }
+}
+getPage(String phone, BuildContext context){
+  getUserName(phone).then((value) {
+                      if(value != "no_user"){if(value[0]=="*"){Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const RoleScreen()));}else{Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DoctorHomePage(doctorName: value)));}}
+                          else{ 
+                            Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LoginScreen()));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("No User Found")));}
+                                }
+                                );
+}
+
+setPref(bool isLogged, String phone)async{
+    SharedPreferences pref=await SharedPreferences.getInstance();
+    pref.setBool("isLogged",isLogged);
+    pref.setString("phone", phone);
+  }
+setRole(String role)async{
+  SharedPreferences pref=await SharedPreferences.getInstance();
+  pref.setString("role", role);
+}
+Future <String> getUserName(String number)async{
+  String name="no_user";
+    await FirebaseFirestore.instance
+                    .collection("doctors")
+                    .where("doctor_mobile", isEqualTo: number)
+                    .get()
+                    .then((value) {
+                  if (value.docs.isNotEmpty) {
+                    name= value.docs[0]["doctor_name"];
+                  }
+                }
+                );
+                await FirebaseFirestore.instance
+                    .collection("guard")
+                    .where("phone", isEqualTo: number)
+                    .get()
+                    .then((value) {
+                  if (value.docs.isNotEmpty) {
+                    name= "*"+value.docs[0]["name"];
+                  }
+                }
+                );
+return name;
 }
 
 // callNumber(String number) async {

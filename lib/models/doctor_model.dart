@@ -8,13 +8,13 @@ class DoctorModel {
   String doctorQualification;
   String doctorRegistrationNo;
   String doctorConsultationFee;
-  String? doctorImage;
+  // String? doctorImage;
   String doctorID;
-  String doctorDocID;
-  bool isMale;
+  int doctorNumber;
+  String gender;
   String doctorHospitalID;
   int doctorRegistrationCount;
-  Timestamp doctorCheckupTime;
+  // Timestamp doctorCheckupTime;
 
   DoctorModel(
       {required this.doctorName,
@@ -22,12 +22,12 @@ class DoctorModel {
       required this.doctorQualification,
       required this.doctorRegistrationNo,
       required this.doctorConsultationFee,
-      required this.doctorImage,
+      // required this.doctorImage,
       required this.doctorID,
-      required this.doctorDocID,
-      required this.isMale,
+      required this.doctorNumber,
+      required this.gender,
       required this.doctorHospitalID,
-      required this.doctorCheckupTime,
+      // required this.doctorCheckupTime,
       required this.doctorRegistrationCount});
 
   Map<String, dynamic> toMap() {
@@ -37,12 +37,12 @@ class DoctorModel {
       'doctor_qualification': doctorQualification,
       'doctor_registration_no': doctorRegistrationNo,
       'doctor_consultation_fee': doctorConsultationFee,
-      'doctor_image': doctorImage,
+      // 'doctor_image': doctorImage,
       'doctor_registration_count': doctorRegistrationCount,
       'doctor_id': doctorID,
-      "isMale": isMale,
-      'doctor_doc_id': doctorDocID,
-      'doctor_checkup_time': doctorCheckupTime,
+      "isMale": gender,
+      'doctor_number': doctorNumber,
+      // 'doctor_checkup_time': doctorCheckupTime,
       'doctor_hospital_id': doctorHospitalID,
     };
   }
@@ -57,13 +57,13 @@ class DoctorModel {
       doctorQualification: map['doctor_qualification'],
       doctorRegistrationNo: map['doctor_registration_no'],
       doctorConsultationFee: map['doctor_consultation_fee'],
-      doctorImage: map['doctor_image'],
+      // doctorImage: map['doctor_image'],
       doctorRegistrationCount: map['doctor_registration_count'],
       doctorID: map['doctor_id'],
-      doctorDocID: map['doctor_doc_id'],
-      isMale: map['isMale'],
+      doctorNumber: map['doctor_number'],
+      gender: map['gender'],
 
-      doctorCheckupTime: map['doctor_checkup_time'],
+      // doctorCheckupTime: map['doctor_checkup_time'],
       doctorHospitalID: map['doctor_hospital_id'],
     );
   }

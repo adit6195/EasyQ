@@ -1,6 +1,7 @@
 import 'package:easy_q/app/firebase/firebase_authentication.dart';
 import 'package:easy_q/modules/auth/enter_phone.dart';
 import 'package:easy_q/modules/registration/patient_registration_page.dart';
+import 'package:easy_q/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      home: SplashPage(),
     );
   }
 }

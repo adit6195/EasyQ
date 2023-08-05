@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_q/functions.dart';
+import 'package:easy_q/modules/doctor/patient%20list/all_doctor_patient.dart';
+import 'package:easy_q/modules/doctor/patient%20list/all_patient.dart';
+import 'package:easy_q/modules/doctor/patient%20list/undo_page.dart';
+import 'package:easy_q/patienttile.dart';
 import 'package:easy_q/models/appointment_model.dart';
-import 'package:easy_q/models/refund_model.dart';
+import 'package:easy_q/modules/doctor/patient%20list/refund_page.dart';
 import 'package:easy_q/modules/registration/patient_registration_page.dart';
 import 'package:easy_q/role_page.dart';
 import 'package:easy_q/widget.dart';
@@ -68,15 +72,26 @@ class _PatientRegistrationListPageState
               widget.role=="Registration"? IconButton(onPressed:() {
                 Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => RefundScreen()));
-              },icon: Icon(Icons.money)): Container(),
+              },icon: Icon(Icons.money))
+              : widget.role !="Registration" && widget.role != "Room 3"?
+              IconButton(onPressed:() {
+                Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => UndoStatePage(role: widget.role)));
+              },icon: Icon(Icons.account_tree))
+              : Container(),
+              widget.role=="Registration"? IconButton(onPressed:() {
+                Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AllDoctorPatient()));
+              },icon: Icon(Icons.groups_3_outlined))
+              : Container(),
+              // widget.role=="Registration"? IconButton(onPressed:() {
+              //   Navigator.of(context).push(MaterialPageRoute(
+              //               builder: (context) => ()));
+              //   },icon: Icon(Icons.money))
+              //   : Container()
             ],
-            backgroundColor: Colors.purple[700],
-            title: GestureDetector(
-                onTap: () {
-                  // Navigator.of(context).push(
-                  //     MaterialPageRoute(builder: (context) => RolePage()));
-                },
-                child:widget.role=="Doctor Room"?Text("Doctor Waiting list") : widget.role=="Room 3 Queue"? Text("Room 3 Queue") : widget.role=="Room 3"? Text("Room 3"): Text("Patient Registration List")),
+            backgroundColor: Color.fromRGBO(123, 31, 162, 1),
+            title: widget.role=="Doctor Room"?Text("Doctor Waiting list") : widget.role=="Room 3 Queue"? Text("Room 3 Queue") : widget.role=="Room 3"? Text("Room 3"): widget.role=="Waiting Room"? Text("Waiting Room"): Text("Patient List"),
                 
             bottom: TabBar(
               tabs: allDoctors.map((e) => Text(e)).toList(),
@@ -112,8 +127,8 @@ class _PatientRegistrationListPageState
           return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                return appointmenttile(
-                    AppointmentModel.fromFirestore(snapshot.data!.docs[index]),role,context);
+                return AppontmentTile(
+                    model: AppointmentModel.fromFirestore(snapshot.data!.docs[index]),role: role,context: context);
               });
         } else {
           return CircularProgressIndicator();
@@ -141,13 +156,3 @@ String getFilter(String role){
   }
 }
 
-
-Color getStatusColor(String patientStatus) {
-  switch (patientStatus) {
-    case "Booked":
-      return Colors.green.shade100;
-
-    default:
-      return Colors.green.shade500;
-  }
-}

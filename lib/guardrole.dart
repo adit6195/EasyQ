@@ -1,7 +1,10 @@
+import 'package:easy_q/functions.dart';
+import 'package:easy_q/role_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'modules/registration/patient_registration_list_page.dart';
 
@@ -15,7 +18,28 @@ class RoleScreen extends StatefulWidget {
 class _RoleScreenState extends State<RoleScreen> {
 
   final allRolesList = ["Registration", "Waiting Room", "Doctor Room","Room 3 Queue","Room 3"];
-  String role = "Registration";
+  String? role = "Registration";
+  String? frole = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getRole();
+
+  }
+
+  getRole()async{
+    SharedPreferences pref=await SharedPreferences.getInstance();
+    setState(() {
+      frole=pref.getString("role")??"";
+    }
+    );
+    if(frole!=""){
+      Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => PatientRegistrationListPage(role: role!)));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,8 +92,9 @@ class _RoleScreenState extends State<RoleScreen> {
                     Center(
                       child: ElevatedButton(
                       onPressed: () {
+                        setRole(role!);
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => PatientRegistrationListPage(role: role)));
+                            builder: (context) => PatientRegistrationListPage(role: role!)));
                             // print(role);
                       },
                       child: const Padding(

@@ -8,6 +8,8 @@ class AppointmentModel {
   String age;
   String ageFormat;
   String gender;
+  int fees;
+  bool isRefund;
   bool isCalled;
   bool isPriority;
   bool isRevisited;
@@ -26,8 +28,10 @@ class AppointmentModel {
     required this.name,
     required this.phone,
     required this.age,
+    required this.fees,
     required this.ageFormat,
     required this.gender,
+    required this.isRefund,
     required this.isCalled,
     required this.isRevisited,
     required this.isPriority,
@@ -48,8 +52,10 @@ class AppointmentModel {
       'name': name,
       'phone': phone,
       'age': age,
+      'fees': fees,
       "ageFormat": ageFormat,
       'gender': gender,
+      'isRefund' : isRefund,
       "isCalled" : isCalled,
       'isPriority': isPriority,
       'isRevisited': isRevisited,
@@ -74,8 +80,10 @@ class AppointmentModel {
       name: map['name'],
       phone: map['phone'],
       age: map['age'],
+      fees: map['fees'],
       ageFormat: map['ageFormat'],
       gender: map['gender'],
+      isRefund : map['isRefund'],
       isCalled: map['isCalled'],
       isRevisited: map['isRevisited'],
       patientID: map['patient_id'],

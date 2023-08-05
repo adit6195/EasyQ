@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:easy_q/app/firebase/firebase_authentication.dart';
+import 'package:easy_q/functions.dart';
 import 'package:easy_q/guardrole.dart';
 import 'package:easy_q/modules/doctor/doctor_home.dart';
 import 'package:easy_q/modules/doctor/doctors_list.dart';
@@ -53,7 +54,7 @@ class _LoginFormState extends State<LoginForm> {
               //   Icons.phone,
               //   color: Colors.black,
               // ),
-              prefix: Text("+91"),
+              prefix: Text("+91"),  
               labelText: 'Mobile Number',
               labelStyle: TextStyle(
                 color: Colors.black
@@ -124,6 +125,8 @@ class _LoginFormState extends State<LoginForm> {
               ? CircularProgressIndicator()
               : ElevatedButton(
                   onPressed: () {
+                    getPage(_mobileController.text, context);
+                    setPref(true,_mobileController.text);
                     // if (isPhoneNumber) {
                     //   setState(() {
                     //     isSendingOTP = true;
@@ -144,19 +147,22 @@ class _LoginFormState extends State<LoginForm> {
                     //       verificationId: verificationCode,
                     //       smsCode: _otpController.text);
                     // }
-                    if (_mobileController.text == "9977443900") {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DoctorHomePage(doctorName: "Ajay")));
-                    }
-                    else if (_mobileController.text == "9425143900") {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DoctorHomePage(doctorName: "Manas Khare")));
-                    }
-                    
-                     else {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const RoleScreen()));
-                    }
+                    // if (_mobileController.text == "9977443900") {
+                    //   Navigator.of(context).push(MaterialPageRoute(
+                    //       builder: (context) => DoctorHomePage(doctorName: "Ajay")));
+                    // }
+                    // else if (_mobileController.text == "9425143900") {
+                    //   Navigator.of(context).push(MaterialPageRoute(
+                    //       builder: (context) => DoctorHomePage(doctorName: "Manas Khare")));
+                    // }
+                    // else if (_mobileController.text == "9039607701") {
+                    //   Navigator.of(context).push(MaterialPageRoute(
+                    //       builder: (context) => DoctorHomePage(doctorName: "Adit Agrawal")));
+                    // }
+                    //  else {
+                    //   Navigator.of(context).push(MaterialPageRoute(
+                    //       builder: (context) => const RoleScreen()));
+                    // }
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(right: 11,left: 11, top: 15,bottom: 15),

@@ -12,12 +12,14 @@ Widget text(String text, {Color color = Colors.black, double fontSize = 16}) {
 Widget textField(
   TextEditingController controller,
   String errorText,
-  String labelText, {
+  String labelText,
+  // RegExp regExp,
+  {
   TextInputType inputType = TextInputType.text,
   int minLines = 1,
 }) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 5),
     child: TextFormField(
       maxLines: minLines,
       keyboardType: inputType,
@@ -61,8 +63,12 @@ Widget textField(
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       ),
       validator: (value) {
-        if (value!.isEmpty) {
-          return errorText;
+        if (value!.isEmpty) 
+        {
+        // if((regExp.hasMatch(value))){
+        //   return errorText;
+        // }
+        return errorText;
         }
         return null;
       },
